@@ -14,5 +14,3 @@ service/__pycache__/
 service/logs/
 *.pyc
 capture/
-package-lock.json
-yarn.lock

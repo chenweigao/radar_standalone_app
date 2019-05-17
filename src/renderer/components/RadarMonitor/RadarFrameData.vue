@@ -25,17 +25,26 @@
       label="Index"
       sortable
       width="180">
+      <template slot-scope="scope">
+        <span>{{scope.row.index}}</span>
+      </template>
     </el-table-column>
 
     <el-table-column
-      prop="dots.x"
+      prop="x"
       label="横坐标 X"
       width="180">
+      <template slot-scope="scope">
+        <span>{{scope.row.x}}</span>
+      </template>
     </el-table-column>
     <el-table-column
-      prop="dots.y"
+      prop="y"
       label="纵坐标 Y"
      >
+      <template slot-scope="scope">
+        <span>{{scope.row.y}}</span>
+      </template>
     </el-table-column>
   </el-table>
   </div>
@@ -51,10 +60,11 @@ export default {
   mounted () {
     window.eventBus.$on('dot', (arg) => {
       console.log(arg)
-      var msg = {x: '', y: ''}
+      var msg = {index: '0', x: '', y: ''}
       if (msg.x !== arg.x) {
         msg.x = arg.x
         msg.y = arg.y
+        msg.index = msg.index + 1
         this.List.push(msg)
       }
     })

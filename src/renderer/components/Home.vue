@@ -5,7 +5,10 @@
       class="animated pulse"
     >
       <span>毫米波雷达安防系统</span>
-      <div style="float: right;padding-right: 1em;">{{this.states}}</div>
+      <div class="myColor" :class="{'colorDisplay':display}">
+        <span class="iconfont" v-show='!display'>&#xe615;{{this.states}}</span>
+        <span class="iconfont" v-show='display'>&#xe659;{{this.states}}</span>
+      </div>
     </div>
     <el-col
       :span="1"
@@ -135,6 +138,7 @@
         <el-tab-pane
           label="用户管理"
           name="second"
+          class="view"
         >
           <user-list></user-list>
         </el-tab-pane>
@@ -150,12 +154,14 @@
         <el-tab-pane
           label="警报邮件"
           name="fourth"
+          class="view"
         >
           <warn-notify></warn-notify>
         </el-tab-pane>
         <el-tab-pane
           label="进程管理"
           name="fifth"
+          class="view"
         >
           <workers></workers>
         </el-tab-pane>
@@ -168,24 +174,28 @@
         <el-tab-pane
           label="帧统计"
           name="sevenh"
+          class="view"
         >
           <frame-statics></frame-statics>
         </el-tab-pane>
         <el-tab-pane
           label="区外离线检测"
           name="eighth"
+          class="view"
         >
           <transection-monitor></transection-monitor>
         </el-tab-pane>
         <el-tab-pane
           label="警报管理"
           name="ninth"
+          class="view"
         >
           <warn-management></warn-management>
         </el-tab-pane>
         <el-tab-pane
           label="警报消息记录"
           name="tenth"
+          class="view"
         >
           <warn-message></warn-message>
         </el-tab-pane>
@@ -226,7 +236,8 @@ export default {
       activeName: 'first',
       isCollapse: false,
       states: '未连接',
-      open: true
+      open: true,
+      display: false
     }
   },
   methods: {
@@ -246,7 +257,9 @@ export default {
   mounted () {
     window.eventBus.$on('link', (status) => {
       this.states = status
-      console.log(status)
+      if (this.states === '已连接') {
+        this.display = true
+      }
     })
   }
 }
@@ -255,5 +268,17 @@ export default {
 <style>
 .pane-first.el-tab-pane {
   display: flex !important;
+}
+.view {
+  margin-left: 10px;
+}
+.myColor {
+  float: right;
+  padding-right: 1em; 
+  color: #F08080;
+  font-size: 18px;
+}
+.colorDisplay {
+  color: #FFFFFF
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
   <div class="connection animated bounceInUp">
-    <h1>连接管理</h1>
-    <div>{{ status }}</div>
-    <h1>设备</h1>
+    <h3>连接管理</h3>
+    <h3>{{ status }}</h3>
+    <h3>设备</h3>
       <el-table :data="devices">
         <el-table-column
           label="名称"
@@ -43,7 +43,7 @@ export default {
       history: [],
       status: '未连接',
       devices: [
-        {id: 0, name: 'FMCW 24GHz', status: 'connected', recv: 0}
+        {id: 0, name: 'FMCW 24GHz', status: 'unconnected', recv: 0}
       ]
     }
   },
@@ -71,6 +71,7 @@ export default {
         function () {
           console.log('Connected to server')
           self.status = '已连接'
+          self.devices[0].status = 'connected'
           var command = '{"rename":"ELECTRON_CLIENT"}'
           self.client.write('' + command.length + ':' + command + ',')
           window.eventBus.$emit('link', self.status)

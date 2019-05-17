@@ -11,13 +11,6 @@
       <el-button @click="store">保存</el-button>
       <el-button @click="clear">重置</el-button>
     </div>
-    <el-alert
-    v-show="isWarn"
-    title="警告"
-    type="error"
-    description="有人进入禁止区域"
-    show-icon>
-    </el-alert>
   </div>
 </template>
 
@@ -26,8 +19,10 @@ export default {
   name: 'warn-management1',
   data () {
     return {
-      x1: 50,
-      y1: 50,
+      // x1: 0,
+      // y1: 0,
+      // targetID: '',
+      Dot: {},
       isAllowEdit: false,
       isAllowDrawLine: false,
       isWarn: false,
@@ -37,7 +32,36 @@ export default {
       clientWidth: '',
       Width: '',
       Height: '',
-      Message: []
+      event: [],
+      Data: [],
+      startPoint: [{
+        x: 0,
+        y: 0
+      }],
+      endPoint: [{
+        x: 0,
+        y: 0
+      }],
+      Point1: [],
+      Point2: [],
+      Point3: [],
+      Point4: [],
+      Point5: [],
+      Point6: [],
+      Point7: [],
+      Point8: [],
+      Point9: [],
+      Point10: [],
+      i: true,
+      a: true,
+      b: true,
+      c: true,
+      d: true,
+      e: true,
+      f: true,
+      g: true,
+      h: true,
+      j: true
     }
   },
   methods: {
@@ -70,24 +94,46 @@ export default {
         var ctx = cvs.getContext('2d')
         this.isAllowDrawLine = true
         var location1 = this.$options.methods.getlocation(a.clientX, a.clientY)
+        this.startPoint.push(location1)
         ctx.moveTo(location1.x, location1.y)
         this.x = location1.x
         this.y = location1.y
-        console.log(this.x)
+        // console.log(this.x)
       }
     },
     mousemove (e) {
+      var cvs = document.getElementById('mystage')
+      var ctx = cvs.getContext('2d')
+      /* ctx.fillStyle = 'red'
+      for (var i = 0; i < this.startPoint.length; i++) {
+        ctx.fillRect(this.startPoint[i].x, this.startPoint[i].y, this.endPoint[i].x, this.endPoint[i].y)
+      } */
       if (this.isAllowDrawLine) {
-        var cvs = document.getElementById('mystage')
-        var ctx = cvs.getContext('2d')
         var location2 = this.$options.methods.getlocation(e.clientX, e.clientY)
+        ctx.clearRect(-cvs.width / 2, 0, cvs.width, cvs.height)
         ctx.fillStyle = 'red'
         ctx.fillRect(this.x, this.y, location2.x - this.x, location2.y - this.y)
         ctx.stroke()
+        this.drawImage()
       }
     },
-    mouseup () {
+    mouseup (e) {
       this.isAllowDrawLine = false
+      var location3 = this.$options.methods.getlocation(e.clientX, e.clientY)
+      this.endPoint.push(location3)
+      console.log(this.startPoint)
+      console.log(this.endPoint)
+    },
+    drawImage () {
+      var cvs = document.getElementById('mystage')
+      var ctx = cvs.getContext('2d')
+      ctx.fillStyle = 'red'
+      // if (this.startPoint[0].x && this.startPoint.length) {
+      for (var i = 0; i < this.startPoint.length - 1; i++) {
+        ctx.fillRect(this.startPoint[i].x, this.startPoint[i].y, this.endPoint[i].x - this.startPoint[i].x, this.endPoint[i].y - this.startPoint[i].y)
+        ctx.stroke()
+      }
+      // }
     },
     edit () {
       this.isAllowEdit = true
@@ -99,20 +145,138 @@ export default {
       var cvs = document.getElementById('mystage')
       var ctx = cvs.getContext('2d')
       ctx.clearRect(-cvs.width / 2, 0, cvs.width, cvs.height)
+      this.startPoint = []
+      this.endPoint = []
     },
     warn () {
       var cvs = document.getElementById('mystage')
       var ctx = cvs.getContext('2d')
-      var imgData = ctx.getImageData(this.x1 + 2 + cvs.width / 2, cvs.height - this.y1, 800, 400)
-      var red = imgData.data[0]
-      if (red === 255) {
+      var imgData = ctx.getImageData(this.Dot.x / 50 + cvs.width / 2, cvs.height - this.Dot.y / 50, 800, 400)
+      var R = imgData.data[0]
+      var G = imgData.data[1]
+      var B = imgData.data[2]
+      if (R === 255 && G === 0 && B === 0) {
         this.isWarn = true
       }
     },
     draw () {
       var cvs = document.getElementById('mystage')
       var ctx = cvs.getContext('2d')
-      ctx.rect(this.x1, this.y1, 1, 1)
+      var Point = this.Dot
+      if (Point.targetID % 10 === 1.0) {
+        this.Point1.push(Point)
+        ctx.fillStyle = '#D2691E'
+      } else if (Point.targetID % 10 === 2.0) {
+        this.Point2.push(Point)
+        // ctx.moveTo(this.Point2[0].x * 50, this.Point2[0].y * 50)
+        ctx.fillStyle = '#A0522D'
+      } else if (Point.targetID % 10 === 3.0) {
+        this.Point3.push(Point)
+        ctx.stroke()
+        // ctx.moveTo(this.Point3[0].x * 50, this.Point3[0].y * 50)
+        ctx.fillStyle = '#C71585'
+      } else if (Point.targetID % 10 === 4.0) {
+        this.Point4.push(Point)
+        // ctx.moveTo(this.Point4[0].x * 50, this.Point4[0].y * 50)
+        ctx.fillStyle = '#0000FF'
+      } else if (Point.targetID % 10 === 5.0) {
+        this.Point5.push(Point)
+        // ctx.moveTo(this.Point5[0].x * 50, this.Point5[0].y * 50)
+        ctx.fillStyle = '#708090'
+      } else if (Point.targetID % 10 === 6.0) {
+        this.Point6.push(Point)
+        // ctx.moveTo(this.Point6[0].x * 50, this.Point6[0].y * 50)
+        ctx.fillStyle = '#00FFFF'
+      } else if (Point.targetID % 10 === 7.0) {
+        this.Point7.push(Point)
+        // ctx.moveTo(this.Point7[0].x * 50, this.Point7[0].y * 50)
+        ctx.fillStyle = '#00FF7F'
+      } else if (Point.targetID % 10 === 8.0) {
+        this.Point8.push(Point)
+        // ctx.moveTo(this.Point8[0].x * 50, this.Point8[0].y * 50)
+        ctx.fillStyle = '#FFD700'
+      } else if (Point.targetID % 10 === 9.0) {
+        this.Point9.push(Point)
+        // ctx.moveTo(this.Point9[0].x * 50, this.Point9[0].y * 50)
+        ctx.fillStyle = '#000000'
+      } else if (Point.targetID % 10 === 0) {
+        this.Point10.push(Point)
+        // ctx.moveTo(this.Point9[0].x * 50, this.Point9[0].y * 50)
+        ctx.fillStyle = '#4169E1'
+      }
+      ctx.fillRect(this.Dot.x * 50, this.Dot.y * 50, 5, 5)
+      ctx.stroke()
+      if (this.Point1[0] && this.i) {
+        this.i = false
+        ctx.moveTo(this.Point1[0].x * 50, this.Point1[0].y * 50)
+      }
+      if (this.Dot.targetID % 10 === 1.0) {
+        ctx.lineTo(this.Dot.x * 50, this.Dot.y * 50)
+      }
+      if (this.Point2[0] && this.a) {
+        this.a = false
+        ctx.moveTo(this.Point2[0].x * 50, this.Point2[0].y * 50)
+      }
+      if (this.Dot.targetID % 10 === 2.0) {
+        ctx.lineTo(this.Dot.x * 50, this.Dot.y * 50)
+      }
+      if (this.Point3[0] && this.b) {
+        this.b = false
+        ctx.moveTo(this.Point3[0].x * 50, this.Point3[0].y * 50)
+      }
+      if (this.Dot.targetID % 10 === 3.0) {
+        ctx.lineTo(this.Dot.x * 50, this.Dot.y * 50)
+      }
+      if (this.Point4[0] && this.c) {
+        this.c = false
+        ctx.moveTo(this.Point4[0].x * 50, this.Point4[0].y * 50)
+      }
+      if (this.Dot.targetID % 10 === 4.0) {
+        ctx.lineTo(this.Dot.x * 50, this.Dot.y * 50)
+      }
+      if (this.Point5[0] && this.d) {
+        this.d = false
+        ctx.moveTo(this.Point5[0].x * 50, this.Point5[0].y * 50)
+      }
+      if (this.Dot.targetID % 10 === 5.0) {
+        ctx.lineTo(this.Dot.x * 50, this.Dot.y * 50)
+      }
+      if (this.Point6[0] && this.e) {
+        this.e = false
+        ctx.moveTo(this.Point6[0].x * 50, this.Point6[0].y * 50)
+      }
+      if (this.Dot.targetID % 10 === 6.0) {
+        ctx.lineTo(this.Dot.x * 50, this.Dot.y * 50)
+      }
+      if (this.Point7[0] && this.f) {
+        this.f = false
+        ctx.moveTo(this.Point7[0].x * 50, this.Point7[0].y * 50)
+      }
+      if (this.Dot.targetID % 10 === 7.0) {
+        ctx.lineTo(this.Dot.x * 50, this.Dot.y * 50)
+      }
+      if (this.Point8[0] && this.g) {
+        this.g = false
+        ctx.moveTo(this.Point8[0].x * 50, this.Point8[0].y * 50)
+      }
+      if (this.Dot.targetID % 10 === 8.0) {
+        ctx.lineTo(this.Dot.x * 50, this.Dot.y * 50)
+      }
+      if (this.Point9[0] && this.h) {
+        this.h = false
+        ctx.moveTo(this.Point9[0].x * 50, this.Point9[0].y * 50)
+      }
+      if (this.Dot.targetID % 10 === 9.0) {
+        ctx.lineTo(this.Dot.x * 50, this.Dot.y * 50)
+      }
+      if (this.Point10[0] && this.h) {
+        this.j = false
+        ctx.moveTo(this.Point10[0].x * 50, this.Point10[0].y * 50)
+      }
+      if (this.Dot.targetID % 10 === 0) {
+        ctx.lineTo(this.Dot.x * 50, this.Dot.y * 50)
+      }
+      ctx.fillRect(this.Dot.x * 50, this.Dot.y * 50, 5, 5)
       ctx.stroke()
     },
     aplayAudio () {
@@ -130,8 +294,7 @@ export default {
       this.draw()
     }, 10)
     window.eventBus.$on('dot', (arg) => {
-      this.x1 = arg.x * 50
-      this.y1 = arg.y * 50
+      this.Dot = arg
     })
     this.Width = document.documentElement.clientWidth
     this.Height = document.documentElement.clientHeight
@@ -151,11 +314,16 @@ export default {
   watch: {
     isWarn: function () {
       if (this.isWarn) {
+        var ipc = require('electron').ipcRenderer
+        ipc.send('warnning')
         this.aplayAudio()
         var date = new Date()
-        this.Message = [this.formatDate(date), this.x1, '有人进入禁止区域']
-        console.log(this.Message)
-        window.eventBus.$emit('warnning', this.Message)
+        var time = this.formatDate(date)
+        var position = [this.Dot.x / 50, this.Dot.y / 50]
+        var message = '有人闯入禁止区域'
+        this.event = {time, position, message}
+        console.log(this.event)
+        window.eventBus.$emit('warnning', this.event)
       }
     }
   }
